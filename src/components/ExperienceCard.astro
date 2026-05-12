@@ -1,0 +1,183 @@
+---
+interface Props {
+	title: string;
+	company?: string;
+	period: string;
+	description: string | string[];
+	technologies?: string[];
+}
+
+const { title, company, period, description, technologies } = Astro.props;
+const descriptions = Array.isArray(description) ? description : [description];
+---
+
+<div class="experience-card">
+	<div class="card-header">
+		<div class="header-content">
+			<h3>{title}</h3>
+			{company && <p class="company">{company}</p>}
+		</div>
+		<span class="period-badge">{period}</span>
+	</div>
+	<div class="card-body">
+		<ul class="description-list">
+			{descriptions.map((desc) => (
+				<li>{desc}</li>
+			))}
+		</ul>
+		{technologies && technologies.length > 0 && (
+			<div class="technologies">
+				{technologies.map((tech) => (
+					<span class="tech-badge">{tech}</span>
+				))}
+			</div>
+		)}
+	</div>
+</div>
+
+<style>
+	.experience-card {
+		background: var(--bg-primary);
+		border: 1px solid var(--border-color);
+		border-left: 5px solid var(--primary);
+		padding: 2rem;
+		margin-bottom: 1.75rem;
+		border-radius: 12px;
+		transition: var(--transition);
+		position: relative;
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+	}
+
+	.experience-card::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+		transition: var(--transition-smooth);
+	}
+
+	.experience-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-lg);
+		border-left-color: var(--secondary);
+	}
+
+	.experience-card:hover::before {
+		right: 100%;
+	}
+
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 1.5rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.header-content {
+		flex: 1;
+	}
+
+	h3 {
+		margin: 0 0 0.5rem 0;
+		color: var(--text-primary);
+		font-size: 1.35rem;
+		font-weight: 700;
+	}
+
+	.company {
+		margin: 0;
+		color: var(--text-secondary);
+		font-size: 1rem;
+		font-weight: 500;
+	}
+
+	.period-badge {
+		background: linear-gradient(135deg, var(--primary-light) 0%, #f0f4ff 100%);
+		color: var(--primary-dark);
+		padding: 0.4rem 1rem;
+		border-radius: 20px;
+		font-size: 0.875rem;
+		font-weight: 600;
+		white-space: nowrap;
+		margin-left: 1.5rem;
+		border: 1px solid var(--primary);
+	}
+
+	.card-body {
+		position: relative;
+		z-index: 1;
+	}
+
+	.description-list {
+		margin: 0;
+		padding-left: 1.5rem;
+		list-style: none;
+	}
+
+	.description-list li {
+		margin-bottom: 0.85rem;
+		color: var(--text-secondary);
+		line-height: 1.75;
+		padding-left: 1.5rem;
+		position: relative;
+	}
+
+	.description-list li::before {
+		content: '▸';
+		position: absolute;
+		left: 0;
+		color: var(--primary);
+		font-weight: bold;
+	}
+
+	.technologies {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border-color);
+	}
+
+	.tech-badge {
+		background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+		color: white;
+		padding: 0.4rem 0.85rem;
+		border-radius: 16px;
+		font-size: 0.8rem;
+		font-weight: 600;
+		display: inline-block;
+		transition: var(--transition);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.tech-badge:hover {
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
+	@media (max-width: 640px) {
+		.experience-card {
+			padding: 1.5rem;
+		}
+
+		.card-header {
+			flex-direction: column;
+		}
+
+		.period-badge {
+			margin-left: 0;
+			margin-top: 1rem;
+		}
+
+		h3 {
+			font-size: 1.15rem;
+		}
+	}
+</style>

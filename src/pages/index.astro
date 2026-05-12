@@ -2,47 +2,360 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import ExperienceCard from '../components/ExperienceCard.astro';
+import SkillGroup from '../components/SkillGroup.astro';
+import EducationCard from '../components/EducationCard.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, PERSONAL_INFO } from '../consts';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				padding: 3rem 1.5rem;
+			}
+
+			/* Hero Section */
+			.hero {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				border-radius: 16px;
+				padding: 4rem 2rem;
+				margin-bottom: 4rem;
+				color: var(--hero-text);
+				position: relative;
+				overflow: hidden;
+				box-shadow: var(--shadow-xl);
+			}
+			/* Force all text inside hero to use hero color for contrast */
+			.hero * {
+				color: var(--hero-text) !important;
+			}
+
+			.hero::before {
+				content: '';
+				position: absolute;
+				top: -50%;
+				right: -10%;
+				width: 400px;
+				height: 400px;
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 50%;
+				filter: blur(40px);
+			}
+
+			.hero::after {
+				content: '';
+				position: absolute;
+				bottom: -30%;
+				left: -5%;
+				width: 300px;
+				height: 300px;
+				background: rgba(255, 255, 255, 0.05);
+				border-radius: 50%;
+				filter: blur(40px);
+			}
+
+			.hero-content {
+				position: relative;
+				z-index: 1;
+			}
+
+			.hero h1 {
+				font-size: 2.75rem;
+				margin: 0 0 0.5rem 0;
+				font-weight: 800;
+				letter-spacing: -1px;
+				color: var(--hero-text);
+			}
+
+			.hero .title {
+				font-size: 1.35rem;
+				margin-bottom: 0.5rem;
+				opacity: 0.95;
+				font-weight: 600;
+				color: var(--hero-text);
+			}
+
+			.hero .subtitle {
+				font-size: 1.05rem;
+				opacity: 0.85;
+				margin-bottom: 1.5rem;
+				color: var(--hero-text);
+			}
+
+			.hero .bio {
+				font-size: 1rem;
+				max-width: 700px;
+				margin: 0 0 2rem 0;
+				line-height: 1.8;
+				color: var(--hero-text);
+				opacity: 0.95;
+			}
+
+			.hero-contact {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+			}
+
+			.contact-link {
+				background: rgba(255, 255, 255, 0.12);
+				color: var(--hero-text);
+				padding: 0.65rem 1.25rem;
+				border-radius: 8px;
+				text-decoration: none;
+				border: 2px solid rgba(255, 255, 255, 0.18);
+				font-weight: 500;
+				transition: var(--transition);
+				font-size: 0.95rem;
+				backdrop-filter: blur(10px);
+			}
+
+			.contact-link:hover {
+				background: rgba(255, 255, 255, 0.25);
+				border-color: rgba(255, 255, 255, 0.5);
+				transform: translateY(-2px);
+			}
+
+			/* Sections */
+			section {
+				margin-bottom: 4rem;
+				animation: fadeInUp 0.6s ease-out;
+			}
+
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			section h2 {
+				font-size: 2.25rem;
+				color: var(--text-primary);
+				margin-bottom: 2rem;
+				position: relative;
+				display: inline-block;
+			}
+
+			section h2::after {
+				content: '';
+				position: absolute;
+				bottom: -12px;
+				left: 0;
+				width: 60px;
+				height: 4px;
+				background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+				border-radius: 2px;
+			}
+
+			.section-intro {
+				color: var(--text-secondary);
+				font-size: 1.05rem;
+				margin-bottom: 2.5rem;
+				line-height: 1.8;
+			}
+
+			/* Grid */
+			.info-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+				gap: 1.5rem;
+				margin: 2rem 0;
+			}
+
+			.info-card {
+				background: var(--bg-secondary);
+				padding: 1.75rem;
+				border-radius: 12px;
+				border-left: 5px solid var(--primary);
+				transition: var(--transition);
+				box-shadow: var(--shadow-sm);
+			}
+
+			.info-card:hover {
+				transform: translateY(-4px);
+				box-shadow: var(--shadow-md);
+				background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--primary-light) 100%);
+			}
+
+			.info-card h4 {
+				margin: 0 0 0.5rem 0;
+				color: var(--text-secondary);
+				font-size: 0.875rem;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				font-weight: 600;
+			}
+
+			.info-card p {
+				margin: 0;
+				color: var(--text-primary);
+				font-size: 1.05rem;
+				font-weight: 600;
+			}
+
+			/* Responsive */
+			@media (max-width: 768px) {
+				.hero {
+					padding: 2.5rem 1.5rem;
+				}
+
+				.hero h1 {
+					font-size: 2rem;
+				}
+
+				.hero .title {
+					font-size: 1.15rem;
+				}
+
+				section h2 {
+					font-size: 1.75rem;
+				}
+
+				.info-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<!-- Hero Section -->
+			<section class="hero">
+				<div class="hero-content">
+					<h1>{PERSONAL_INFO.name}</h1>
+					<div class="title">{PERSONAL_INFO.title}</div>
+					<div class="subtitle">{PERSONAL_INFO.subtitle}</div>
+					<p class="bio">{PERSONAL_INFO.bio}</p>
+					<div class="hero-contact">
+						<a href={`mailto:${PERSONAL_INFO.email}`} class="contact-link">Email</a>
+						<a href={PERSONAL_INFO.linkedin} target="_blank" class="contact-link">LinkedIn</a>
+						<a href={PERSONAL_INFO.github} target="_blank" class="contact-link">GitHub</a>
+					</div>
+				</div>
+			</section>
+
+			<!-- Experiencia -->
+			<section>
+				<h2>Experiencia Profesional</h2>
+				<p class="section-intro">
+					Más de 5 años desarrollando soluciones backend escalables, sistemas multi-agentes y automatización empresarial con IA.
+				</p>
+				<ExperienceCard
+					title="Backend Developer & AI Automation Engineer"
+					period="2025 – 2026"
+					description={[
+						'Diseño e implementación de sistemas multi-agentes y bots conversacionales en producción',
+						'Construcción de agentes inteligentes orquestados con n8n conectados a backends en Django',
+						'Desarrollo de bots de WhatsApp con lógica avanzada basada en prompts y herramientas',
+						'Automatización de respuestas por correo mediante integración con Outlook',
+						'Integración de bots con Instagram y APIs externas',
+						'Despliegue completo en Docker con control de versiones usando Gitflow',
+						'Diseño de prompts seguros y políticas de seguridad en agentes de IA',
+					]}
+					technologies={['Django', 'n8n', 'WhatsApp API', 'Docker', 'PostgreSQL', 'FastAPI']}
+				/>
+				<ExperienceCard
+					title="Científico de Datos | Ingeniero ML Ops"
+					company="Dazzlabs"
+					period="2024 – 2025"
+					description={[
+						'Desarrollo de modelos de machine learning y deep learning para extracción y análisis de datos',
+						'Web scraping a gran escala con Scrapy y Selenium',
+						'Contenerización con Docker para despliegue en producción',
+						'Automatización de flujos y orquestación de agentes de IA con n8n',
+						'Búsqueda semántica y sistemas de recomendación con bases de datos vectoriales',
+					]}
+					technologies={['Python', 'Scrapy', 'PyTorch', 'n8n', 'Docker', 'PostgreSQL']}
+				/>
+				<ExperienceCard
+					title="Desarrollador Backend"
+					company="GoDjango"
+					period="2023 – 2024"
+					description={[
+						'Desarrollo de APIs REST escalables con Django Rest Framework',
+						'Optimización de consultas y modelos de datos en PostgreSQL y MySQL',
+						'Implementación de autenticación y autorización con JWT',
+					]}
+					technologies={['Django', 'DRF', 'PostgreSQL', 'MySQL', 'JWT']}
+				/>
+				<ExperienceCard
+					title="Programador Independiente"
+					period="2017 – 2023"
+					description={[
+						'Programación competitiva con C, C++ y Python',
+						'Proyectos personales con React, Next.js y Go',
+						'Desarrollo de backend para aplicaciones web',
+					]}
+					technologies={['C++', 'Python', 'React', 'Next.js', 'Go']}
+				/>
+			</section>
+
+			<!-- Habilidades -->
+			<section>
+				<h2>🛠️ Habilidades Técnicas</h2>
+				<p class="section-intro">
+					Especializado en backend, automatización empresarial y sistemas inteligentes. Experiencia práctica en producción.
+				</p>
+				<SkillGroup
+					category="Backend & APIs"
+					skills={['Python', 'Django', 'Django Rest Framework', 'FastAPI', 'Go', 'Rust (Axum)', 'Flask', 'JavaScript']}
+				/>
+				<SkillGroup
+					category="Automatización & AI Agents"
+					skills={['n8n', 'Multi-agents Design', 'Bots Conversacionales', 'System Prompts', 'RAG', 'Vector DBs']}
+				/>
+				<SkillGroup
+					category="Integraciones Reales"
+					skills={['WhatsApp Business', 'Outlook', 'Instagram API', 'Webhooks', 'REST APIs']}
+				/>
+				<SkillGroup
+					category="Bases de Datos"
+					skills={['PostgreSQL', 'MySQL', 'MongoDB', 'Vector Databases', 'Redis']}
+				/>
+				<SkillGroup
+					category="DevOps & Despliegue"
+					skills={['Docker', 'Git', 'Gitflow', 'Linux', 'Bash', 'AWS', 'Azure', 'GitHub']}
+				/>
+				<SkillGroup
+					category="Data & Scraping"
+					skills={['Scrapy', 'Selenium', 'BeautifulSoup', 'Scikit-learn', 'PyTorch', 'Transformers']}
+				/>
+			</section>
+
+			<!-- Educación -->
+			<section>
+				<h2>🎓 Formación Académica</h2>
+				<EducationCard
+					title="Ingeniero en Ciencias Informáticas"
+					institution="Universidad de Ciencias Informáticas (UCI)"
+					location="La Habana, Cuba"
+					year="2024"
+				/>
+			</section>
+
+			<!-- Idiomas -->
+			<section>
+				<h2>🗣️ Idiomas</h2>
+				<div class="info-grid">
+					<div class="info-card">
+						<h4>Español</h4>
+						<p>Nativo</p>
+					</div>
+					<div class="info-card">
+						<h4>Inglés</h4>
+						<p>B1</p>
+					</div>
+				</div>
+			</section>
 		</main>
 		<Footer />
 	</body>
